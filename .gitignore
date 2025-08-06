@@ -1,6 +1,8 @@
-init
-/obj
-/.vs/UserToken/CopilotIndices/17.12.38.29086
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
 /.vs
-/bin/Debug/net8.0-windows
+*/obj
+*/bin
 *.user
