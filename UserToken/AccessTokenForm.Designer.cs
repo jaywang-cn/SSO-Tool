@@ -44,6 +44,16 @@
 			label4 = new Label();
 			textBox1 = new TextBox();
 			label1 = new Label();
+			groupBox1 = new GroupBox();
+			label9 = new Label();
+			label10 = new Label();
+			claim2ValueText = new TextBox();
+			claim1ValueText = new TextBox();
+			claim2NameText = new TextBox();
+			label3 = new Label();
+			label2 = new Label();
+			claim1NameText = new TextBox();
+			groupBox1.SuspendLayout();
 			SuspendLayout();
 			// 
 			// audTextbox
@@ -84,15 +94,16 @@
 			// 
 			// result2TextBox
 			// 
-			result2TextBox.Location = new Point(39, 337);
+			result2TextBox.Location = new Point(39, 467);
 			result2TextBox.Multiline = true;
 			result2TextBox.Name = "result2TextBox";
-			result2TextBox.Size = new Size(1002, 366);
+			result2TextBox.ScrollBars = ScrollBars.Vertical;
+			result2TextBox.Size = new Size(1002, 159);
 			result2TextBox.TabIndex = 23;
 			// 
 			// button2
 			// 
-			button2.Location = new Point(39, 287);
+			button2.Location = new Point(39, 414);
 			button2.Name = "button2";
 			button2.Size = new Size(112, 34);
 			button2.TabIndex = 22;
@@ -167,21 +178,102 @@
 			// 
 			// textBox1
 			// 
-			textBox1.Location = new Point(39, 748);
+			textBox1.Location = new Point(39, 708);
 			textBox1.Multiline = true;
 			textBox1.Name = "textBox1";
 			textBox1.ScrollBars = ScrollBars.Vertical;
-			textBox1.Size = new Size(1002, 410);
+			textBox1.Size = new Size(1002, 450);
 			textBox1.TabIndex = 28;
 			// 
 			// label1
 			// 
 			label1.AutoSize = true;
-			label1.Location = new Point(39, 720);
+			label1.Location = new Point(39, 661);
 			label1.Name = "label1";
 			label1.Size = new Size(126, 25);
 			label1.TabIndex = 29;
 			label1.Text = "token payload";
+			// 
+			// groupBox1
+			// 
+			groupBox1.Controls.Add(label9);
+			groupBox1.Controls.Add(label10);
+			groupBox1.Controls.Add(claim2ValueText);
+			groupBox1.Controls.Add(claim1ValueText);
+			groupBox1.Controls.Add(label3);
+			groupBox1.Controls.Add(claim2NameText);
+			groupBox1.Controls.Add(label2);
+			groupBox1.Controls.Add(claim1NameText);
+			groupBox1.Location = new Point(59, 279);
+			groupBox1.Name = "groupBox1";
+			groupBox1.Size = new Size(1002, 129);
+			groupBox1.TabIndex = 34;
+			groupBox1.TabStop = false;
+			groupBox1.Text = "context claims";
+			// 
+			// label9
+			// 
+			label9.AutoSize = true;
+			label9.Location = new Point(467, 77);
+			label9.Name = "label9";
+			label9.Size = new Size(109, 25);
+			label9.TabIndex = 37;
+			label9.Text = "claim2 value";
+			// 
+			// label10
+			// 
+			label10.AutoSize = true;
+			label10.Location = new Point(467, 43);
+			label10.Name = "label10";
+			label10.Size = new Size(109, 25);
+			label10.TabIndex = 36;
+			label10.Text = "claim1 value";
+			// 
+			// claim2ValueText
+			// 
+			claim2ValueText.Location = new Point(582, 74);
+			claim2ValueText.Name = "claim2ValueText";
+			claim2ValueText.Size = new Size(400, 31);
+			claim2ValueText.TabIndex = 35;
+			// 
+			// claim1ValueText
+			// 
+			claim1ValueText.Location = new Point(582, 37);
+			claim1ValueText.Name = "claim1ValueText";
+			claim1ValueText.Size = new Size(400, 31);
+			claim1ValueText.TabIndex = 34;
+			// 
+			// claim2NameText
+			// 
+			claim2NameText.Location = new Point(183, 74);
+			claim2NameText.Name = "claim2NameText";
+			claim2NameText.Size = new Size(246, 31);
+			claim2NameText.TabIndex = 33;
+			// 
+			// label3
+			// 
+			label3.AutoSize = true;
+			label3.Location = new Point(54, 77);
+			label3.Name = "label3";
+			label3.Size = new Size(112, 25);
+			label3.TabIndex = 32;
+			label3.Text = "claim2 name";
+			// 
+			// label2
+			// 
+			label2.AutoSize = true;
+			label2.Location = new Point(54, 43);
+			label2.Name = "label2";
+			label2.Size = new Size(112, 25);
+			label2.TabIndex = 30;
+			label2.Text = "claim1 name";
+			// 
+			// claim1NameText
+			// 
+			claim1NameText.Location = new Point(183, 37);
+			claim1NameText.Name = "claim1NameText";
+			claim1NameText.Size = new Size(246, 31);
+			claim1NameText.TabIndex = 31;
 			// 
 			// AccessTokenForm
 			// 
@@ -204,9 +296,12 @@
 			Controls.Add(label5);
 			Controls.Add(endpointTextBox);
 			Controls.Add(label4);
+			Controls.Add(groupBox1);
 			Name = "AccessTokenForm";
 			StartPosition = FormStartPosition.CenterScreen;
 			Text = "AccessTokenForm";
+			groupBox1.ResumeLayout(false);
+			groupBox1.PerformLayout();
 			ResumeLayout(false);
 			PerformLayout();
 		}
@@ -229,5 +324,14 @@
 		private Label label4;
 		private TextBox textBox1;
 		private Label label1;
+		private GroupBox groupBox1;
+		private Label label9;
+		private Label label10;
+		private TextBox claim2ValueText;
+		private TextBox claim1ValueText;
+		private Label label3;
+		private TextBox claim2NameText;
+		private Label label2;
+		private TextBox claim1NameText;
 	}
 }

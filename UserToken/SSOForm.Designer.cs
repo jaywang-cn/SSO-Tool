@@ -1,6 +1,6 @@
 ﻿namespace TokenGenerator
 {
-	partial class Form1
+	partial class SSOForm
 	{
 		/// <summary>
 		///  Required designer variable.
