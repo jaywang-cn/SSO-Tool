@@ -1,13 +1,6 @@
 using WTG.OpenIDConnect.Login;
 using System.Diagnostics;
 using static WTG.OpenIDConnect.Login.OIDCLoginRequestMessage;
-using System.Configuration;
-using System.Security.Cryptography.X509Certificates;
-using WTG.IdentitySecurity;
-using WTG.OpenIDConnect.Token;
-using System.Text;
-using System.Windows.Forms;
-using Newtonsoft.Json;
 
 namespace TokenGenerator
 {
@@ -17,9 +10,6 @@ namespace TokenGenerator
 		{
 			InitializeComponent();
 
-			ClientTokenGenerator = new OAuthClientTokenGenerator(new DummyHttpClientFactory());
-			ClientTokenValidator = new OAuthClientTokenValidator(new OpenIdConnectConfigurationHelper(null), null);
-
 			try
 			{
 				comboBox2.DataSource = Enum.GetValues(typeof(OIDCServer));
@@ -27,23 +17,12 @@ namespace TokenGenerator
 				comboBox1.SelectedItem = "Jaywtgb2c";
 				domainHintTextBox.Text = "Azure";
 				redirectUrl.Text = "http://127.0.0.1/CargowiseOne/Authorize/";
-				InitAccessTokenControl();
 			}
 			catch (Exception ex)
 			{
 				result1TextBox.Text = ex.Message;
 			}
 		}
-
-		void InitAccessTokenControl()
-		{
-			endpointTextBox.Text = ConfigurationManager.AppSettings["AccessTokenEndpoint"];
-			azpTextbox.Text = ConfigurationManager.AppSettings["AccessTokenAzp"];
-			audTextbox.Text = ConfigurationManager.AppSettings["AccessTokenAudience"];
-		}
-
-		OAuthClientTokenGenerator ClientTokenGenerator;
-		OAuthClientTokenValidator ClientTokenValidator;
 
 		private async void button1_Click(object sender, EventArgs e)
 		{
@@ -118,42 +97,6 @@ namespace TokenGenerator
 		}
 
 		CancellationTokenSource TokenSource = new CancellationTokenSource();
-
-		private void button3_Click(object sender, EventArgs e)
-		{
-			var openFile = new OpenFileDialog() { Multiselect = false, RestoreDirectory = true };
-			if (openFile.ShowDialog() == DialogResult.OK)
-			{
-				privateKeyPathTextBox.Text = openFile.FileName;
-			}
-		}
-
-		private void button4_Click(object sender, EventArgs e)
-		{
-			var openFile = new OpenFileDialog() { Multiselect = false, RestoreDirectory = true };
-			if (openFile.ShowDialog() == DialogResult.OK)
-			{
-				certificatePathTextBox.Text = openFile.FileName;
-			}
-		}
-
-		private async void button2_Click(object sender, EventArgs e)
-		{
-			try
-			{
-				var endpoint = endpointTextBox.Text;
-
-				var privateKeyPem = File.ReadAllText(privateKeyPathTextBox.Text);
-				var privateKey = RSAKeyProvider.ImportPrivateKey(privateKeyPem);
-
-				var certificate = new X509Certificate2(certificatePathTextBox.Text);
-				result2TextBox.Text = await new OAuthClientTokenGenerator(new DummyHttpClientFactory()).GetClientAccessTokenAsync(endpoint, privateKey, certificate, azpTextbox.Text, audTextbox.Text, CancellationToken.None);
-			}
-			catch (Exception ex)
-			{
-				result2TextBox.Text = ex.Message + Environment.NewLine + ex.StackTrace;
-			}
-		}
 
 		private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
 		{

@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net8.0-windows</TargetFramework>
+		<UseWindowsForms>true</UseWindowsForms>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<BaseOutputPath>$(MSBuildThisFileDirectory)..\bin\TokenTool\</BaseOutputPath>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="WTG.IdentitySecurity" Version="1.0.10" />
+		<PackageReference Include="WTG.OpenIDConnect.Login" Version="1.0.12" />
+		<PackageReference Include="WTG.OpenIDConnect.Token" Version="1.1.2" />
+	</ItemGroup>
+
+</Project>

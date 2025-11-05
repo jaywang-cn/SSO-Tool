@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34003.232
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TokenGenerator", "UserToken\TokenGenerator.csproj", "{31DD8D12-BA95-4862-B8C9-B7E17312AD6D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserToken", "UserToken\UserToken.csproj", "{31DD8D12-BA95-4862-B8C9-B7E17312AD6D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebAppWithSSO", "WebAppWithSSO\WebAppWithSSO.csproj", "{BEB5CEB9-61E4-49C6-AA27-DA98415F7B28}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientToken", "ClientToken\ClientToken.csproj", "{B77CE797-5018-4BA0-A5B9-33F936CBE378}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{BEB5CEB9-61E4-49C6-AA27-DA98415F7B28}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BEB5CEB9-61E4-49C6-AA27-DA98415F7B28}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BEB5CEB9-61E4-49C6-AA27-DA98415F7B28}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B77CE797-5018-4BA0-A5B9-33F936CBE378}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B77CE797-5018-4BA0-A5B9-33F936CBE378}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B77CE797-5018-4BA0-A5B9-33F936CBE378}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B77CE797-5018-4BA0-A5B9-33F936CBE378}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
