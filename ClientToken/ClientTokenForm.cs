@@ -48,16 +48,19 @@ public partial class ClientTokenForm : Form
 			var certificate = CredentialReader.ReadCertificate(certificatePathTextBox.Text);
 
 			var contextPayload = new JwtPayload();
+			bool hasContext = false;
 			if (!string.IsNullOrEmpty(claim1NameText.Text) && !string.IsNullOrEmpty(claim1ValueText.Text))
 			{
 				contextPayload.Add(claim1NameText.Text, claim1ValueText.Text);
+				hasContext = true;
 			}
 			if (!string.IsNullOrEmpty(claim2NameText.Text) && !string.IsNullOrEmpty(claim2ValueText.Text))
 			{
 				contextPayload.Add(claim2NameText.Text, claim2ValueText.Text);
+				hasContext = true;
 			}
 
-			var assertion = GetClientAssertion(privateKey, certificate, endpoint, azpTextbox.Text, contextPayload);
+			var assertion = GetClientAssertion(privateKey, certificate, endpoint, azpTextbox.Text, hasContext ? contextPayload : null);
 
 			var httpResponseMessage = await GetTokenResponseAsync(endpoint, azpTextbox.Text, audTextbox.Text, assertion, CancellationToken.None);
 			if (httpResponseMessage.IsSuccessStatusCode)
@@ -100,8 +103,11 @@ public partial class ClientTokenForm : Form
 			{ "exp", num2 },
 			{ "iat", num },
 			{ "nbf", num3 },
-			{ "context", contextPayload }
 		};
+		if (contextPayload != null)
+		{
+			payload.Add("context", contextPayload);
+		}
 		return JwtSecurity.GenerateSignedJwt(privateKey, cert, payload);
 	}
 

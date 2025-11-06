@@ -5,7 +5,7 @@
 		<TargetFramework>net8.0-windows</TargetFramework>
 		<UseWindowsForms>true</UseWindowsForms>
 		<ImplicitUsings>enable</ImplicitUsings>
-		<BaseOutputPath>$(MSBuildThisFileDirectory)..\bin\TokenTool\</BaseOutputPath>
+		<BaseOutputPath>$(MSBuildThisFileDirectory)..\bin\UserToken\</BaseOutputPath>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 	</PropertyGroup>
 

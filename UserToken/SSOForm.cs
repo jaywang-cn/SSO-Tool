@@ -88,7 +88,7 @@ namespace TokenGenerator
 			switch (serverType)
 			{
 				case OIDCServer.Azure:
-					return new string[] { "openid", "offline_access" };
+					return new string[] { "openid", "offline_access", clientId };
 				case OIDCServer.OneLogin:
 					return new string[] { "openid", "params", "profile" };
 				default:
