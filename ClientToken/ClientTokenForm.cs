@@ -2,10 +2,12 @@
 using Newtonsoft.Json.Linq;
 using System.Configuration;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.Json;
 using WTG.IdentitySecurity;
+using WTG.OpenIDConnect.Token;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace ClientToken;
@@ -14,10 +16,11 @@ public partial class ClientTokenForm : Form
 {
 	TextContentCache TextContentCache => textContentCache ??= new TextContentCache();
 	TextContentCache textContentCache;
-
+	OAuthClientTokenGenerator tokenGenerator;
 	public ClientTokenForm()
 	{
 		InitializeComponent();
+		tokenGenerator = new OAuthClientTokenGenerator(new DummyHttpClientFactory());
 	}
 
 	private void button3_Click(object sender, EventArgs e)
@@ -42,6 +45,8 @@ public partial class ClientTokenForm : Form
 	{
 		try
 		{
+			result2TextBox.Text = string.Empty;
+
 			var endpoint = endpointTextBox.Text;
 
 			var privateKey = CredentialReader.ReadPrivateKey(privateKeyPathTextBox.Text);
@@ -60,122 +65,33 @@ public partial class ClientTokenForm : Form
 				hasContext = true;
 			}
 
-			var assertion = GetClientAssertion(privateKey, certificate, endpoint, azpTextbox.Text, hasContext ? contextPayload : null);
+			var accessToken = await tokenGenerator.GetClientAccessTokenAsync(
+				endpoint,
+				privateKey,
+				certificate,
+				azpTextbox.Text,
+				null,
+				[$"{audTextbox.Text}/.default"],
+				hasContext ? contextPayload : null,
+				CancellationToken.None);
 
-			var httpResponseMessage = await GetTokenResponseAsync(endpoint, azpTextbox.Text, audTextbox.Text, assertion, CancellationToken.None);
-			if (httpResponseMessage.IsSuccessStatusCode)
+			result2TextBox.Text = accessToken;
+
+			try
 			{
-				result2TextBox.Text = await GetAccessTokenAsync(httpResponseMessage);
-
-				try
-				{
-					var jwtSecurityToken = new JwtSecurityTokenHandler().ReadJwtToken(result2TextBox.Text);
-					var payload = JsonSerializer.Serialize(jwtSecurityToken.Payload, new JsonSerializerOptions() { WriteIndented = true });
-					textBox1.Text = payload;
-				}
-				catch (Exception innerEx)
-				{
-					textBox1.Text = "Error parsing JWT: " + innerEx.Message + Environment.NewLine + innerEx.StackTrace;
-				}
+				var jwtSecurityToken = new JwtSecurityTokenHandler().ReadJwtToken(result2TextBox.Text);
+				var payload = JsonSerializer.Serialize(jwtSecurityToken.Payload, new JsonSerializerOptions() { WriteIndented = true });
+				textBox1.Text = payload;
 			}
-			else
+			catch (Exception innerEx)
 			{
-				textBox1.Text = await GetErrorMessageAsync(httpResponseMessage);
+				textBox1.Text = "Error parsing JWT: " + innerEx.Message + Environment.NewLine + innerEx.StackTrace;
 			}
 		}
 		catch (Exception ex)
 		{
 			result2TextBox.Text = ex.Message + Environment.NewLine + ex.StackTrace;
 		}
-	}
-
-	static string GetClientAssertion(RSA privateKey, X509Certificate2 cert, string url, string clientId, object contextPayload)
-	{
-		long num = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-		long num2 = num + 3600;
-		long num3 = num - 100;
-		JwtPayload payload = new JwtPayload
-		{
-			{ "jti", Guid.NewGuid().ToString() },
-			{ "sub", clientId },
-			{ "iss", clientId },
-			{ "aud", url },
-			{ "exp", num2 },
-			{ "iat", num },
-			{ "nbf", num3 },
-		};
-		if (contextPayload != null)
-		{
-			payload.Add("context", contextPayload);
-		}
-		return JwtSecurity.GenerateSignedJwt(privateKey, cert, payload);
-	}
-
-	async Task<HttpResponseMessage> GetTokenResponseAsync(string url, string azp, string aud, string clientAssertion, CancellationToken cancellationToken)
-	{
-		using HttpClient httpClient = new DummyHttpClientFactory().CreateClient();
-		httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
-		var nameValueCollection = new Dictionary<string, string>
-		{
-			{ "client_id", azp },
-			{ "client_assertion_type", "urn:ietf:params:oauth:client-assertion-type:jwt-bearer" },
-			{ "client_assertion", clientAssertion },
-			{ "grant_type", "client_credentials" },
-			{
-				"scope",
-				aud + "/.default"
-			}
-		};
-		using FormUrlEncodedContent content = new FormUrlEncodedContent(nameValueCollection);
-		return await httpClient.PostAsync(url, content, cancellationToken);
-	}
-
-	async Task<string> GetErrorMessageAsync(HttpResponseMessage response)
-	{
-		string text = await response.Content.ReadAsStringAsync();
-		if (ContentIsJson(response))
-		{
-			JObject jObjectOrThrow = GetJObjectOrThrow(text, GetFailedToGetTokenMessage(text));
-			if (jObjectOrThrow.TryGetValue("error", out var value) && jObjectOrThrow.TryGetValue("error_description", out var value2))
-			{
-				return GetFailedToGetTokenMessage($"{value}.\r\n{value2}");
-			}
-		}
-
-		return GetFailedToGetTokenMessage(text);
-	}
-
-	static async Task<string> GetAccessTokenAsync(HttpResponseMessage response)
-	{
-		string text = await response.Content.ReadAsStringAsync();
-		if (ContentIsJson(response) && GetJObjectOrThrow(text, GetFailedToGetTokenMessage(text)).TryGetValue("access_token", out JToken value))
-		{
-			return value.Value<string>();
-		}
-
-		throw new InvalidOperationException(GetFailedToGetTokenMessage(text));
-	}
-
-	private static bool ContentIsJson(HttpResponseMessage response)
-	{
-		return response.Content.Headers.ContentType?.MediaType == "application/json";
-	}
-
-	private static JObject GetJObjectOrThrow(string json, string exceptionMessage)
-	{
-		try
-		{
-			return JObject.Parse(json);
-		}
-		catch (JsonReaderException innerException)
-		{
-			throw new InvalidOperationException(exceptionMessage, innerException);
-		}
-	}
-
-	private static string GetFailedToGetTokenMessage(string extraDetails)
-	{
-		return "Failed to get access token. " + extraDetails;
 	}
 
 	protected override void OnFormClosed(FormClosedEventArgs e)

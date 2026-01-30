@@ -10,8 +10,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="WTG.IdentitySecurity" Version="1.0.10" />
-		<PackageReference Include="WTG.OpenIDConnect.Token" Version="1.1.2" />
+		<PackageReference Include="WTG.OpenIDConnect.Token" Version="1.2.5" />
 	</ItemGroup>
 
 	<ItemGroup>
